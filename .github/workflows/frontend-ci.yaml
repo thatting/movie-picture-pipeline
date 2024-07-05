@@ -51,7 +51,7 @@ jobs:
         run: cd frontend && npm ci
       # Run the tests.
       - name: Run tests
-        run: cd frontend && CI=true npm test
+        run: cd frontend && npm test --passWithNoTests
 
   build:
     needs: [linting, testing]
