@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: cd frontend && npm ci
       # Run the linter.
-      - run: cd frontend && eslint --fix . 
+      - run: cd frontend && npm run lint --fix  
 
   testing:
     runs-on: ubuntu-latest
