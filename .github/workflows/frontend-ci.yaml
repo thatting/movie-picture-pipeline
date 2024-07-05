@@ -15,7 +15,6 @@ on:
 # Jobs defined in the workflow
 jobs:
   linting:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       # Check out the code from the repository
@@ -35,7 +34,6 @@ jobs:
       - run: cd frontend && npm run lint
 
   testing:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       # Check out the code from the repository
