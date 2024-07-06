@@ -1,7 +1,6 @@
 # Workflow name
 name: frontend-ci-workflow
 
-# Triggers for the workflow
 on:
   # Manual trigger using the workflow_dispatch event
   workflow_dispatch:
@@ -12,44 +11,41 @@ on:
     branches:
       - main
 
-# Jobs defined in the workflow
+# Jobs in the workflow: linting, testing and build
 jobs:
   linting:
     runs-on: ubuntu-latest
     steps:
-      # Check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
-      # Set up a Node.js environment using the latest version
+
       - name: Set up Node.js 
         uses: actions/setup-node@v4
         with:
           node-version: latest
       # Perform a cache action to restore cache before dependency install
       
-      # Install the dependencies
       - name: Install dependencies
         run: cd frontend && npm ci
-      # Run the linter.
-      - run: cd frontend && npm run lint -- --fix  
+
+      - name: Run the linter
+        run: cd frontend && npm run lint -- --fix  
 
   testing:
     runs-on: ubuntu-latest
     steps:
-      # Check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
-      # Set up a Node.js environment using the latest version
+      
       - name: Set up Node.js 
         uses: actions/setup-node@v4
         with:
           node-version: latest
       # Perform a cache action to restore cache before dependency install
 
-      # Install the dependencies
       - name: Install dependencies
         run: cd frontend && npm ci
-      # Run the tests.
+  
       - name: Run tests
         run: cd frontend && npm test 
 
@@ -57,26 +53,24 @@ jobs:
     needs: [linting, testing]
     runs-on: ubuntu-latest
     steps:
-      # Check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
-      # Set up a Node.js environment using the latest version
+
       - name: Set up Node.js 
         uses: actions/setup-node@v4
         with:
           node-version: latest
       # Perform a cache action to restore cache before dependency install
 
-      # Install the dependencies
       - name: Install dependencies
         run: cd frontend && npm ci
-      # Create environment variable
+  
       - name: Create environment variable
         run: REACT_APP_MOVIE_API_URL=http://localhost:5000 
-      # Build docker image
+    
       - name: Build docker image
         run: cd frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL --tag=mp-frontend:latest .
-      # Run docker container
+    
       - name: Run docker container
         run: cd frontend && docker run --name mp-frontend -p 3000:3000 -d mp-frontend
 
