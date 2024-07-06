@@ -28,7 +28,10 @@ jobs:
 
       - name: Install pipenv
         run: pip install pipenv --user
-      
+
+      - name: Install flake8
+        run: pip install flake8
+
       - name: Install dependencies
         run: cd backend && pipenv install
 
