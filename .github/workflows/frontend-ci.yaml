@@ -1,6 +1,7 @@
 # Workflow name
 name: frontend-ci-workflow
 
+# Triggers
 on:
   # Manual trigger using the workflow_dispatch event
   workflow_dispatch:
