@@ -32,7 +32,6 @@ jobs:
       - name: Run the linter
         run: cd backend && pipenv run lint
 
-
   testing:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +49,6 @@ jobs:
 
       - name: Run tests
         run: cd backend && pipenv run test
-
 
   build:
     needs: [linting, testing]
