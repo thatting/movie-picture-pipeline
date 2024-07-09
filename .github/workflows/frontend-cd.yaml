@@ -92,8 +92,7 @@ jobs:
           REPOSITORY: frontend
           IMAGE_TAG: ${{ github.sha }}
         run: | 
-        cd frontend
-        docker build --build-arg=REACT_APP_MOVIE_API_URL -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        cd frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Deploy application to EKS cluster
