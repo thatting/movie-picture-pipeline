@@ -100,6 +100,13 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: cd frontend && docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
+      - name: Set image tag to newer version
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: frontend
+          IMAGE_TAG: ${{ github.sha }}
+        run: cd frontend && kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+
       - name: Deploy application to EKS cluster
-        run: cd frontend && kubectl apply -f k8s/
+        run: cd frontend && kustomize build | kubectl apply -f -
 
