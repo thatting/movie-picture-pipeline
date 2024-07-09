@@ -105,8 +105,8 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: frontend
           IMAGE_TAG: ${{ github.sha }}
-        run: cd frontend && kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+        run: cd frontend/k8s && kustomize edit set image frontend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Deploy application to EKS cluster
-        run: cd frontend && kustomize build | kubectl apply -f -
+        run: cd frontend/k8s && kustomize build | kubectl apply -f -
 
