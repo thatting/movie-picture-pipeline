@@ -98,3 +98,4 @@ jobs:
 
       - name: Deploy application to EKS cluster
         run: cd frontend && kubectl apply -f k8s/
+
