@@ -86,15 +86,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Built docker image with SHA
+      - name: Build docker image with SHA and push to ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: frontend
           IMAGE_TAG: ${{ github.sha }}
-        run: cd frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-       
-      - name: Push to ECR 
-        run:  cd frontend && docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        run: | 
+        cd frontend
+        docker build --build-arg=REACT_APP_MOVIE_API_URL -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
       - name: Deploy application to EKS cluster
         run: cd frontend && kubectl apply -f k8s/
