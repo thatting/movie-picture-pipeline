@@ -1,8 +1,8 @@
 # Following references have been used:
 # 1) Material available in the Udacity classroom exercises 
 # 2) Official documentation for GitHub Action:
-# https://github.com/actions/setup-node
-
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows
 
 # Workflow name
 name: frontend-ci-workflow
@@ -30,7 +30,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: latest
-      # Perform a cache action to restore cache before dependency install
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       
       - name: Install dependencies
         run: cd frontend && npm ci
@@ -48,7 +60,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: latest
-      # Perform a cache action to restore cache before dependency install
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install dependencies
         run: cd frontend && npm ci
@@ -67,7 +91,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: latest
-      # Perform a cache action to restore cache before dependency install
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install dependencies
         run: cd frontend && npm ci
