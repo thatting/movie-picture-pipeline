@@ -43,7 +43,7 @@ jobs:
         run: cd backend && pipenv install
 
       - name: Run the linter
-      - run: cd backend && pipenv run lint
+        run: cd backend && pipenv run lint
 
   testing:
     runs-on: ubuntu-latest
