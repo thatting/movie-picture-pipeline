@@ -1,9 +1,8 @@
 # Following references have been used:
 # 1) Material available in the Udacity classroom exercises 
 # 2) Official documentation for GitHub Action:
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 # https://github.com/aws-actions/amazon-ecr-login
-# https://github.com/actions/setup-python
-
 
 # Workflow name
 name: backend-cd-workflow
@@ -31,7 +30,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      # Perform a cache action to restore cache before dependency install
       
       - name: Install pipenv
         run: pip install pipenv --user
@@ -55,7 +53,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      # Perform a cache action to restore cache before dependency install
 
       - name: Install pipenv
         run: pip install pipenv --user 
@@ -77,7 +74,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10' 
-      # Perform a cache action to restore cache before dependency install
 
       - name: Install pipenv
         run: pip install pipenv --user
@@ -99,14 +95,14 @@ jobs:
       - name: Build docker image with SHA 
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: frontend
+          REPOSITORY: backend
           IMAGE_TAG: ${{ github.sha }}
         run: cd backend && docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
 
       - name: Push to ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: frontend
+          REPOSITORY: backend
           IMAGE_TAG: ${{ github.sha }}
         run: cd backend && docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
