@@ -1,0 +1,128 @@
+# Following references have been used:
+# 1) Material available in the Udacity classroom exercises 
+# 2) Official documentation for GitHub Action:
+# https://github.com/aws-actions/amazon-ecr-login
+# https://github.com/actions/setup-python
+
+
+# Workflow name
+name: backend-cd-workflow
+
+# Triggers 
+on:
+  # Manual trigger using the workflow_dispatch event
+  workflow_dispatch:
+  # Automatic trigger on pull request events targeting the main branch
+  pull_request:
+    types:
+      - closed  
+    branches:
+      - main
+
+# Jobs in the workflow: linting, testing and build
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10 
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      # Perform a cache action to restore cache before dependency install
+      
+      - name: Install pipenv
+        run: pip install pipenv --user
+
+      - name: Install flake8
+        run: pip install flake8
+
+      - name: Install dependencies
+        run: cd backend && pipenv install
+
+      - name: Run the linter
+      - run: cd backend && pipenv run lint
+
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10 
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      # Perform a cache action to restore cache before dependency install
+
+      - name: Install pipenv
+        run: pip install pipenv --user 
+
+      - name: Install dependencies
+        run: cd backend && pipenv install
+
+      - name: Run tests
+        run:  cd backend && pipenv run test
+
+  build:
+    needs: [linting, testing]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' 
+      # Perform a cache action to restore cache before dependency install
+
+      - name: Install pipenv
+        run: pip install pipenv --user
+
+      - name: Install dependencies
+        run: cd backend && pipenv install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  
+  
+      - name: Set up ECR login
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build docker image with SHA 
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: frontend
+          IMAGE_TAG: ${{ github.sha }}
+        run: cd backend && docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+
+      - name: Push to ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: frontend
+          IMAGE_TAG: ${{ github.sha }}
+        run: cd backend && docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name cluster --region us-east-1
+
+      - name: Set image tag to newer version
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: frontend
+          IMAGE_TAG: ${{ github.sha }}
+        run: cd backend/k8s && kustomize edit set image backend=$REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy application to EKS cluster
+        run: cd backend/k8s && kustomize build | kubectl apply -f -
+
+
+
+
