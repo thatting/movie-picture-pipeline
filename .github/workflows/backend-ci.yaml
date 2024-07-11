@@ -3,7 +3,6 @@
 # 2) Official documentation for GitHub Action:
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-
 # Workflow name
 name: backend-ci-workflow
 
