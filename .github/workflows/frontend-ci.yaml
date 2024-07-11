@@ -1,3 +1,9 @@
+# Following references have been used:
+# 1) Material available in the Udacity classroom exercises 
+# 2) Official documentation for GitHub Action:
+# https://github.com/actions/setup-node
+
+
 # Workflow name
 name: frontend-ci-workflow
 
