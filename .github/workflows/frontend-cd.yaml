@@ -100,6 +100,9 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: cd frontend && docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name cluster --region us-east-1
+
       - name: Set image tag to newer version
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -109,4 +112,7 @@ jobs:
 
       - name: Deploy application to EKS cluster
         run: cd frontend/k8s && kustomize build | kubectl apply -f -
+
+
+
 
