@@ -48,7 +48,7 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Run the linter
-        run: cd frontend && npm run lint -- --fix  
+        run: cd frontend && FAIL_LINT=true npm run lint -- --fix  
 
   testing:
     runs-on: ubuntu-latest
