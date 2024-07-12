@@ -40,7 +40,7 @@ jobs:
         run: cd backend && pipenv install
 
       - name: Run the linter
-        run: cd backend && pipenv run lint
+        run: cd backend && pipenv run lint-fail
 
   testing:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
         run: cd backend && pipenv install
 
       - name: Run tests
-        run: cd backend && pipenv run test
+        run: cd backend && FAIL_TEST=true pipenv run test
 
   build:
     needs: [linting, testing]
