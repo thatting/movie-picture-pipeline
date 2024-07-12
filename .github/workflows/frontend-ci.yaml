@@ -76,12 +76,9 @@ jobs:
 
       - name: Install dependencies
         run: cd frontend && npm ci
-
-      - name: Simulate failure
-        run: export FAIL_TEST=true  
   
       - name: Run tests
-        run: cd frontend && CI=true npm test 
+        run: cd frontend && FAIL_TEST=true npm test 
 
   build:
     needs: [linting, testing]
