@@ -108,7 +108,7 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Create environment variable
-        run: REACT_APP_MOVIE_API_URL=http://a3f60cadd3ca14dbab4ba8b2e2512d75-656529660.us-east-1.elb.amazonaws.com 
+        run: REACT_APP_MOVIE_API_URL=http://a7c83d8016ff444028619c025da59b5d-2037546422.us-east-1.elb.amazonaws.com
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
