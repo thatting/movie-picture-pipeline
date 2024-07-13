@@ -108,7 +108,7 @@ jobs:
         run: cd frontend && npm ci
 
       - name: Create environment variable
-        run: REACT_APP_MOVIE_API_URL=http://localhost:5000 
+        run: REACT_APP_MOVIE_API_URL=http://172.20.250.14 
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
